@@ -1,14 +1,12 @@
 package entity
 
-import (
-
-)
-
 type Item struct {
-	ID string `json:"id"`
-	Name string `json:"name"`
+	ID          string `json:"msg_id"`
+	Title       string `json:"title"`
+	Category    string `json:"category"`
+	PhotosLink  string `json:"photos_link"`
 	Description string `json:"description"`
-	Category string `json:"category"`
-	From string `json:"from"`
-	To string `json:"to"`
+	DueDate     string `json:"due_date"`
+	UploadBy    string `json:"upload_by"`
+	Status      string `json:"status"`
 }

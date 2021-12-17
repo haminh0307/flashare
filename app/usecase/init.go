@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"flashare/app/usecase/item"
+	item_usecase "flashare/app/usecase/item"
 )
 
 type FlashareUsecase struct {
