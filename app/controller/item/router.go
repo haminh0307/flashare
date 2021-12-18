@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ItemController interface {
+type ItemModule interface {
 	SetupRouter(r *gin.RouterGroup)
-	Fetch(ctx *gin.Context)
 }

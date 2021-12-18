@@ -3,8 +3,8 @@ package item_controller
 import (
 	"net/http"
 
-	"flashare/app/usecase/item"
 	"flashare/app/controller/item"
+	"flashare/app/usecase/item"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,8 +18,8 @@ func NewItemController(itemUC item_usecase.ItemUsecase) item_controller.ItemCont
 	}
 }
 
-func (iHandler *itemHandler) SetupRouter (r *gin.RouterGroup) {
-	r.GET("/fetch", iHandler.Fetch)	
+func (iHandler *itemHandler) SetupRouter(r *gin.RouterGroup) {
+	r.GET("/fetch", iHandler.Fetch)
 }
 
 func (iHandler *itemHandler) Fetch(ctx *gin.Context) {

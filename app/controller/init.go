@@ -2,20 +2,23 @@ package controller
 
 import (
 	"flashare/app/controller/item"
+	"flashare/app/controller/user"
 )
 
 type FlashareController struct {
-	ItemController item_controller.ItemController
+	AuthenticationCtrl user_controller.AuthenticationController
+	ItemCtrl           item_controller.ItemController
 }
 
-var flashareController FlashareController
+var flashareCtrl FlashareController
 
 func GetFlashareController() FlashareController {
-	return flashareController
+	return flashareCtrl
 }
 
-func InitFlashareController(itemController item_controller.ItemController) {
-	flashareController = FlashareController{
-		itemController,
+func InitFlashareController(authCtrl user_controller.AuthenticationController, itemCtrl item_controller.ItemController) {
+	flashareCtrl = FlashareController{
+		authCtrl,
+		itemCtrl,
 	}
 }

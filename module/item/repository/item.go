@@ -1,16 +1,20 @@
 package item_repository
 
 import (
-	"flashare/entity"
+	"go.mongodb.org/mongo-driver/mongo"
+
 	"flashare/app/repository/item"
+	"flashare/entity"
 )
 
 type itemRepoImpl struct {
-
+	Coll *mongo.Collection
 }
 
-func NewItemRepo() item_repository.ItemRepository {
-	return &itemRepoImpl{}
+func NewItemRepo(coll *mongo.Collection) item_repository.ItemRepository {
+	return &itemRepoImpl{
+		coll,
+	}
 }
 
 func (iRepo *itemRepoImpl) Fetch() ([]entity.Item, error) {
