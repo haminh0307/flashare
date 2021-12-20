@@ -36,10 +36,10 @@ type signInRequest struct {
 func (authHandler *authenticationHandler) SignIn(ctx *gin.Context) {
 	var rq signInRequest
 	// if invalid parameters
-	if err := ctx.ShouldBind(&rq); err != nil {
+	if err := ctx.ShouldBind(&rq); err != nil || rq.Email == "" || rq.Pwd == "" || !utils.IsValidMail(rq.Email) {
 		ctx.JSON(http.StatusBadRequest, utils.DataResponse{
-			Status: "fail",
-			Data:   flashare_errors.ErrorInvalidParameters.Error(),
+			Success: false,
+			Data:    flashare_errors.ErrorInvalidParameters.Error(),
 		})
 		return
 	}
@@ -48,15 +48,15 @@ func (authHandler *authenticationHandler) SignIn(ctx *gin.Context) {
 	// if invalid credentials
 	if err == flashare_errors.ErrorInvalidCredentials {
 		ctx.JSON(http.StatusOK, utils.DataResponse{
-			Status: "fail",
-			Data:   err.Error(),
+			Success: false,
+			Data:    err.Error(),
 		})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, utils.DataResponse{
-		Status: "okay",
-		Data:   user,
+		Success: true,
+		Data:    user,
 	})
 }
 
@@ -69,8 +69,11 @@ type signUpRequest struct {
 func (authHandler *authenticationHandler) SignUp(ctx *gin.Context) {
 	var rq signUpRequest
 	// if invalid parameters
-	if err := ctx.ShouldBind(&rq); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "error": "invalid parameters"})
+	if err := ctx.ShouldBind(&rq); err != nil || rq.Email == "" || rq.Pwd == "" || rq.FullName == "" || !utils.IsValidMail(rq.Email) {
+		ctx.JSON(http.StatusBadRequest, utils.DataResponse{
+			Success: false,
+			Data:    flashare_errors.ErrorInvalidParameters.Error(),
+		})
 		return
 	}
 
@@ -78,8 +81,8 @@ func (authHandler *authenticationHandler) SignUp(ctx *gin.Context) {
 	// if server error
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, utils.DataResponse{
-			Status: "fail",
-			Data:   flashare_errors.ErrorInternalServerError.Error(),
+			Success: false,
+			Data:    flashare_errors.ErrorInternalServerError.Error(),
 		})
 		return
 	}
@@ -94,14 +97,14 @@ func (authHandler *authenticationHandler) SignUp(ctx *gin.Context) {
 	if err != nil {
 		// TODO: output?
 		ctx.JSON(http.StatusOK, utils.DataResponse{
-			Status: "fail",
-			Data:   err.Error(),
+			Success: false,
+			Data:    err.Error(),
 		})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, utils.DataResponse{
-		Status: "okay",
-		Data:   user_id,
+		Success: true,
+		Data:    user_id,
 	})
 }

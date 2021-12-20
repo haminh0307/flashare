@@ -3,9 +3,11 @@ package item_controller
 import (
 	"net/http"
 
+	"github.com/gin-gonic/gin"
+
 	"flashare/app/controller/item"
 	"flashare/app/usecase/item"
-	"github.com/gin-gonic/gin"
+	"flashare/utils"
 )
 
 type itemHandler struct {
@@ -26,8 +28,14 @@ func (iHandler *itemHandler) Fetch(ctx *gin.Context) {
 	items, err := iHandler.ItemUC.Fetch()
 	if err != nil {
 		// TODO: output?
-		ctx.JSON(http.StatusOK, gin.H{"status": "fail", "error": err.Error()})
+		ctx.JSON(http.StatusOK, utils.DataResponse{
+			Success: true,
+			Data:    err.Error(),
+		})
 	}
 
-	ctx.JSON(http.StatusOK, map[string]interface{}{"status": "okay", "data": items})
+	ctx.JSON(http.StatusOK, utils.DataResponse{
+		Success: true,
+		Data:    items,
+	})
 }
