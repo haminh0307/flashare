@@ -12,4 +12,8 @@ var (
 	// auth errors
 	ErrorInvalidCredentials = errors.New("invalid credentials provided")
 	ErrorEmailAlreadyExists = errors.New("email already exists")
+
+	// item errors
+	ErrorFailToFetchItem  = errors.New("fail to fetch item") // temp
+	ErrorFailToUploadItem = errors.New("fail to upload item")
 )

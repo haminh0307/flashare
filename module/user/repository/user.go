@@ -27,7 +27,6 @@ func (uRepo *userRepoImpl) GetByEmail(email string) (u entity.User, err error) {
 }
 
 func (uRepo *userRepoImpl) Create(user entity.User) (interface{}, error) {
-	// TODO: insert without _id field
 	res, err := uRepo.UserColl.InsertOne(context.Background(), user)
 	return res.InsertedID, err
 }
