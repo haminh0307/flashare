@@ -6,6 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+
+	"flashare/utils"
 )
 
 func init() {
@@ -18,6 +20,7 @@ func init() {
 	InitRepo(os.Getenv("MONGODB_USER"), os.Getenv("MONGODB_PASSWORD"), os.Getenv("MONGODB_DATABASE"))
 	InitUsecase()
 	InitController()
+	utils.InitCloudinary(os.Getenv("CLOUDINARY_NAME"), os.Getenv("CLOUDINARY_API_KEY"), os.Getenv("CLOUDINARY_API_SECRET"))
 }
 
 func main() {

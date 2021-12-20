@@ -46,12 +46,12 @@ func (iHandler *itemHandler) Fetch(ctx *gin.Context) {
 }
 
 type uploadRequest struct {
-	Title       string     `json:"title"`
-	Category    string     `json:"category"`
-	PhotosLink  []string   `json:"photos_link"`
-	Description string     `json:"description"`
-	DueDate     *time.Time `json:"due_date,omitempty"`
-	UploadedBy  string     `json:"uploaded_by"`
+	Title        string     `json:"title"`
+	Category     string     `json:"category"`
+	PhotosBase64 []string   `json:"photos_base64"`
+	Description  string     `json:"description"`
+	DueDate      *time.Time `json:"due_date,omitempty"`
+	UploadedBy   string     `json:"uploaded_by"`
 }
 
 func (iHandler *itemHandler) Upload(ctx *gin.Context) {
@@ -65,15 +65,25 @@ func (iHandler *itemHandler) Upload(ctx *gin.Context) {
 		return
 	}
 
-	item_id, err := iHandler.ItemUC.Upload(entity.Item{
+	photos_link := []string{}
+	for _, photo := range rq.PhotosBase64 {
+		link, err := utils.UploadBase64Image(photo)
+		if err == nil {
+			photos_link = append(photos_link, link)
+		}
+	}
+
+	item := entity.Item{
 		Title:       rq.Title,
 		Category:    rq.Category,
-		PhotosLink:  rq.PhotosLink,
+		PhotosLink:  photos_link,
 		Description: rq.Description,
 		DueDate:     rq.DueDate,
 		UploadedBy:  rq.UploadedBy,
 		Status:      "open",
-	})
+	}
+
+	item_id, err := iHandler.ItemUC.Upload(item)
 
 	if err != nil {
 		ctx.JSON(http.StatusOK, utils.DataResponse{
