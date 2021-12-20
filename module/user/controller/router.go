@@ -9,8 +9,8 @@ type userModule struct {
 	AuthenticationCtrl user_controller.AuthenticationController
 }
 
-func NewUserModule(authController user_controller.AuthenticationController) userModule {
-	return userModule{
+func NewUserModule(authController user_controller.AuthenticationController) user_controller.UserModule {
+	return &userModule{
 		authController,
 	}
 }
