@@ -46,12 +46,12 @@ func (iHandler *itemHandler) Fetch(ctx *gin.Context) {
 }
 
 type uploadRequest struct {
-	Title        string     `json:"title"`
-	Category     string     `json:"category"`
+	Title        string     `json:"title" binding:"required"`
+	Category     string     `json:"category" binding:"required"`
 	PhotosBase64 []string   `json:"photos_base64"`
 	Description  string     `json:"description"`
 	DueDate      *time.Time `json:"due_date,omitempty"`
-	UploadedBy   string     `json:"uploaded_by"`
+	UploadedBy   string     `json:"uploaded_by" binding:"required"`
 }
 
 func (iHandler *itemHandler) Upload(ctx *gin.Context) {

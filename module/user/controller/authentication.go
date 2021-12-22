@@ -29,8 +29,8 @@ func (authHandler *authenticationHandler) SetupRouter(r *gin.RouterGroup) {
 }
 
 type signInRequest struct {
-	Email string `json:"email"`
-	Pwd   string `json:"password"`
+	Email string `json:"email" binding:"required"`
+	Pwd   string `json:"password" binding:"required"`
 }
 
 func (authHandler *authenticationHandler) SignIn(ctx *gin.Context) {
@@ -45,8 +45,15 @@ func (authHandler *authenticationHandler) SignIn(ctx *gin.Context) {
 	}
 
 	user, err := authHandler.AuthenticationUC.SignIn(rq.Email, rq.Pwd)
-	// if invalid credentials
-	if err == flashare_errors.ErrorInvalidCredentials {
+	// if error
+	if err == flashare_errors.ErrorInternalServerError {
+		ctx.JSON(http.StatusInternalServerError, utils.DataResponse{
+			Success: false,
+			Data:    err.Error(),
+		})
+		return
+	}
+	if err != nil {
 		ctx.JSON(http.StatusOK, utils.DataResponse{
 			Success: false,
 			Data:    err.Error(),
@@ -61,9 +68,9 @@ func (authHandler *authenticationHandler) SignIn(ctx *gin.Context) {
 }
 
 type signUpRequest struct {
-	Email    string `json:"email"`
-	Pwd      string `json:"password"`
-	FullName string `json:"full_name"`
+	Email    string `json:"email" binding:"required"`
+	Pwd      string `json:"password" binding:"required"`
+	FullName string `json:"full_name" binding:"required"`
 }
 
 func (authHandler *authenticationHandler) SignUp(ctx *gin.Context) {
