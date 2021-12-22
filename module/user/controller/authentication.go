@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 
-	"flashare/app/controller/user"
-	"flashare/app/usecase/user"
+	user_controller "flashare/app/controller/user"
+	user_usecase "flashare/app/usecase/user"
 	"flashare/entity"
-	"flashare/errors"
+	flashare_errors "flashare/errors"
 	"flashare/utils"
 )
 

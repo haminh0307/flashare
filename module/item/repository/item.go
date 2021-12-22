@@ -3,7 +3,7 @@ package item_repository
 import (
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"flashare/app/repository/item"
+	item_repository "flashare/app/repository/item"
 	"flashare/entity"
 )
 
