@@ -14,9 +14,9 @@ type requestRepoImpl struct {
 	RequestColl *mongo.Collection
 }
 
-func NewRequestRepo(ucoll *mongo.Collection) request_repository.RequestRepository {
+func NewRequestRepo(rcoll *mongo.Collection) request_repository.RequestRepository {
 	return &requestRepoImpl{
-		ucoll,
+		rcoll,
 	}
 }
 

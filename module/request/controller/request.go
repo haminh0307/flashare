@@ -34,8 +34,8 @@ func (rqHandler *requestHandler) GetPendingRequest(ctx *gin.Context) {
 	var rq requestByUserID
 	if err := ctx.ShouldBind(&rq); err != nil {
 		ctx.JSON(http.StatusBadRequest, utils.DataResponse{
-			Status: "fail",
-			Data:   flashare_errors.ErrorInvalidParameters.Error(),
+			Success: false,
+			Data:    flashare_errors.ErrorInvalidParameters.Error(),
 		})
 		return
 	}
@@ -43,14 +43,14 @@ func (rqHandler *requestHandler) GetPendingRequest(ctx *gin.Context) {
 	// internal server error
 	if err != nil {
 		ctx.JSON(http.StatusOK, utils.DataResponse{
-			Status: "fail",
-			Data:   err.Error(),
+			Success: false,
+			Data:    err.Error(),
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, utils.DataResponse{
-		Status: "okay",
-		Data:   requestList,
+		Success: true,
+		Data:    requestList,
 	})
 }
 
@@ -58,8 +58,8 @@ func (rqHandler *requestHandler) GetArchievedRequest(ctx *gin.Context) {
 	var rq requestByUserID
 	if err := ctx.ShouldBind(&rq); err != nil {
 		ctx.JSON(http.StatusBadRequest, utils.DataResponse{
-			Status: "fail",
-			Data:   flashare_errors.ErrorInvalidParameters.Error(),
+			Success: false,
+			Data:    flashare_errors.ErrorInvalidParameters.Error(),
 		})
 		return
 	}
@@ -67,13 +67,13 @@ func (rqHandler *requestHandler) GetArchievedRequest(ctx *gin.Context) {
 	// internal server error
 	if err != nil {
 		ctx.JSON(http.StatusOK, utils.DataResponse{
-			Status: "fail",
-			Data:   err.Error(),
+			Success: false,
+			Data:    err.Error(),
 		})
 		return
 	}
 	ctx.JSON(http.StatusOK, utils.DataResponse{
-		Status: "okay",
-		Data:   requestList,
+		Success: true,
+		Data:    requestList,
 	})
 }
