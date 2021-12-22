@@ -6,6 +6,6 @@ import (
 )
 
 type ItemUsecase interface {
-	Fetch() ([]entity.Item, error)
+	Fetch(cate string) ([]entity.Item, error)
 	Upload(item entity.Item) (primitive.ObjectID, error)
 }
