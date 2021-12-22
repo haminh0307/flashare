@@ -19,11 +19,21 @@ func NewItemUsecase(itemRepo item_repository.ItemRepository) item_usecase.ItemUs
 	}
 }
 
-func (iUC *itemUsecaseImpl) Fetch() ([]entity.Item, error) {
-	items, err := iUC.repo.Fetch()
+func (iUC *itemUsecaseImpl) Fetch(cate string) ([]entity.Item, error) {
+	var items []entity.Item
+	var err error
+
+	// filter by category or not
+	if cate == "" {
+		items, err = iUC.repo.FetchOpenItem()
+	} else {
+		items, err = iUC.repo.FetchOpenItemByCategory(cate)
+	}
+
 	if err != nil {
 		return nil, flashare_errors.ErrorFailToFetchItem
 	}
+
 	return items, err
 }
 

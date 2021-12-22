@@ -5,6 +5,7 @@ import (
 )
 
 type ItemRepository interface {
-	Fetch() ([]entity.Item, error)
+	FetchOpenItem() ([]entity.Item, error)
+	FetchOpenItemByCategory(cate string) ([]entity.Item, error)
 	Create(item entity.Item) (interface{}, error)
 }

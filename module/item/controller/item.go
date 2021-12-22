@@ -29,7 +29,9 @@ func (iHandler *itemHandler) SetupRouter(r *gin.RouterGroup) {
 }
 
 func (iHandler *itemHandler) Fetch(ctx *gin.Context) {
-	items, err := iHandler.ItemUC.Fetch()
+	// use ctx.Query to match /fetch (all category) and /fetch?category=cate
+	cate := ctx.Query("category")
+	items, err := iHandler.ItemUC.Fetch(cate)
 	if err != nil {
 		// TODO: output?
 		ctx.JSON(http.StatusOK, utils.DataResponse{
