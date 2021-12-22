@@ -1,6 +1,8 @@
 package item_repository
 
 import (
+	"context"
+
 	"go.mongodb.org/mongo-driver/mongo"
 
 	item_repository "flashare/app/repository/item"
@@ -8,7 +10,7 @@ import (
 )
 
 type itemRepoImpl struct {
-	Coll *mongo.Collection
+	ItemColl *mongo.Collection
 }
 
 func NewItemRepo(coll *mongo.Collection) item_repository.ItemRepository {
@@ -23,10 +25,15 @@ func (iRepo *itemRepoImpl) Fetch() ([]entity.Item, error) {
 	// now fake
 	return []entity.Item{
 		{
-			ID: "1",
+			Title: "1",
 		},
 		{
-			ID: "2",
+			Title: "2",
 		},
 	}, nil
+}
+
+func (iRepo *itemRepoImpl) Create(item entity.Item) (interface{}, error) {
+	res, err := iRepo.ItemColl.InsertOne(context.Background(), item)
+	return res.InsertedID, err
 }

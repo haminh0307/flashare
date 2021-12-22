@@ -9,8 +9,8 @@ type itemModule struct {
 	ItemCtrl item_controller.ItemController
 }
 
-func NewItemModule(itemCtrl item_controller.ItemController) itemModule {
-	return itemModule{
+func NewItemModule(itemCtrl item_controller.ItemController) item_controller.ItemModule {
+	return &itemModule{
 		itemCtrl,
 	}
 }
