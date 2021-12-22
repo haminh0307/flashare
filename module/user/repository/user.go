@@ -6,7 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"flashare/app/repository/user"
+	user_repository "flashare/app/repository/user"
 	"flashare/entity"
 )
 
@@ -21,7 +21,7 @@ func NewUserRepo(ucoll *mongo.Collection) user_repository.UserRepository {
 }
 
 func (uRepo *userRepoImpl) GetByEmail(email string) (u entity.User, err error) {
-	filter := bson.D{{"email", email}}
+	filter := bson.D{{Key: "email", Value: email}}
 	err = uRepo.UserColl.FindOne(context.Background(), filter).Decode(&u)
 	return
 }
