@@ -16,4 +16,7 @@ var (
 	// item errors
 	ErrorFailToFetchItem  = errors.New("fail to fetch item") // temp
 	ErrorFailToUploadItem = errors.New("fail to upload item")
+
+	// message errors
+	ErrorFailToFetchMessage = errors.New("fail to fetch message")
 )
