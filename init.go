@@ -59,8 +59,7 @@ func InitUsecase() {
 	itemRepo := repository.GetFlashareRepo().ItemRepo
 	itemUC := item_usecase.NewItemUsecase(itemRepo)
 
-	requestRepo := repository.GetFlashareRepo().RequestRepo
-	requestUC := request_usecase.NewRequestUsecase(requestRepo)
+	requestUC := request_usecase.NewRequestUsecase(repository.GetFlashareRepo())
 
 	usecase.InitFlashareUsecase(
 		authUC,
