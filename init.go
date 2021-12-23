@@ -24,6 +24,10 @@ import (
 	item_controller "flashare/module/item/controller"
 	item_repository "flashare/module/item/repository"
 	item_usecase "flashare/module/item/usecase"
+
+	message_controller "flashare/module/message/controller"
+	message_repository "flashare/module/message/repository"
+	message_usecase "flashare/module/message/usecase"
 )
 
 func InitRepo(user, pwd, db string) {
@@ -44,11 +48,13 @@ func InitRepo(user, pwd, db string) {
 	userRepo := user_repository.NewUserRepo(client.Database(db).Collection("users"))
 	itemRepo := item_repository.NewItemRepo(client.Database(db).Collection("items"))
 	requestRepo := request_repository.NewRequestRepo(client.Database(db).Collection("requests"))
+	messageRepo := message_repository.NewMessageRepo(client.Database(db).Collection("messages"))
 
 	repository.InitFlashareRepo(
 		userRepo,
 		itemRepo,
 		requestRepo,
+		messageRepo,
 	)
 }
 
@@ -61,10 +67,14 @@ func InitUsecase() {
 
 	requestUC := request_usecase.NewRequestUsecase(repository.GetFlashareRepo())
 
+	messageRepo := repository.GetFlashareRepo().MessageRepo
+	messageUC := message_usecase.NewMessageUsecase(messageRepo)
+
 	usecase.InitFlashareUsecase(
 		authUC,
 		itemUC,
 		requestUC,
+		messageUC,
 	)
 }
 
@@ -78,10 +88,14 @@ func InitController() {
 	requestUC := usecase.GetFlashareUsecase().RequestUC
 	requestCtrl := request_controller.NewRequestController(requestUC)
 
+	messageUC := usecase.GetFlashareUsecase().MessageUC
+	messageCtrl := message_controller.NewMessageController(messageUC)
+
 	controller.InitFlashareController(
 		authCtrl,
 		itemCtrl,
 		requestCtrl,
+		messageCtrl,
 	)
 }
 
@@ -96,4 +110,7 @@ func Routing(r *gin.RouterGroup) {
 
 	requestModule := request_controller.NewRequestModule(flashareController.RequestCtrl)
 	requestModule.SetupRouter(r)
+
+	messageModule := message_controller.NewMessageModule(flashareController.MessageCtrl)
+	messageModule.SetupRouter(r)
 }
