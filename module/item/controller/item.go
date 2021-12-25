@@ -35,7 +35,7 @@ func (iHandler *itemHandler) Fetch(ctx *gin.Context) {
 	if err != nil {
 		// TODO: output?
 		ctx.JSON(http.StatusOK, utils.DataResponse{
-			Success: true,
+			Success: false,
 			Data:    err.Error(),
 		})
 		return
@@ -89,7 +89,7 @@ func (iHandler *itemHandler) Upload(ctx *gin.Context) {
 
 	if err != nil {
 		ctx.JSON(http.StatusOK, utils.DataResponse{
-			Success: true,
+			Success: false,
 			Data:    err.Error(),
 		})
 		return
