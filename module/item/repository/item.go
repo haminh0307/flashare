@@ -58,12 +58,8 @@ func (iRepo *itemRepoImpl) Create(item entity.Item) (interface{}, error) {
 	return res.InsertedID, err
 }
 
-func (iRepo *itemRepoImpl) GetItemByID(id string) (res entity.Item, err error) {
-	objectID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		return
-	}
-	filter := bson.D{{Key: "_id", Value: objectID}}
+func (iRepo *itemRepoImpl) GetItemByID(id primitive.ObjectID) (res entity.Item, err error) {
+	filter := bson.D{{Key: "_id", Value: id}}
 	err = iRepo.ItemColl.FindOne(context.Background(), filter).Decode(&res)
 	return
 }

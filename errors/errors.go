@@ -14,9 +14,10 @@ var (
 	ErrorEmailAlreadyExists = errors.New("email already exists")
 
 	// item errors
-	ErrorFailToFetchItem  = errors.New("fail to fetch item") // temp
-	ErrorFailToUploadItem = errors.New("fail to upload item")
-	ErrorFailToFindItem   = errors.New("fail to find item")
+	ErrorFailToFetchItem     = errors.New("fail to fetch item") // temp
+	ErrorFailToUploadItem    = errors.New("fail to upload item")
+	ErrorFailToFindItem      = errors.New("fail to find item")
+	ErrorInvalidItemIdentity = errors.New("invalid item identity")
 
 	// request erros
 	ErrorFailToCreateRequest  = errors.New("fail to create request")
