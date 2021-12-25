@@ -55,3 +55,14 @@ func (rRepo *requestRepoImpl) GetArchievedRequest(userID string) (rqs []entity.R
 	}
 	return
 }
+
+func (rRepo *requestRepoImpl) CreateRequest(request entity.Request) (interface{}, error) {
+	rq, err := rRepo.RequestColl.InsertOne(context.Background(), request)
+	return rq.InsertedID, err
+}
+
+func (rRepo *requestRepoImpl) FindRequestByUserIDAndItemID(userID, itemID string) (rq interface{}, err error) {
+	filter := bson.D{{Key: "sender", Value: userID}, {Key: "item", Value: itemID}}
+	err = rRepo.RequestColl.FindOne(context.Background(), filter).Decode(&rq)
+	return
+}

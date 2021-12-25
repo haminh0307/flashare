@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	item_repository "flashare/app/repository/item"
@@ -21,7 +22,7 @@ func NewItemRepo(coll *mongo.Collection) item_repository.ItemRepository {
 }
 
 func (iRepo *itemRepoImpl) FetchOpenItem() ([]entity.Item, error) {
-	filter := bson.D{{"status", "open"}}
+	filter := bson.D{{Key: "status", Value: "open"}}
 
 	cursor, err := iRepo.ItemColl.Find(context.Background(), filter)
 	if err != nil {
@@ -37,7 +38,7 @@ func (iRepo *itemRepoImpl) FetchOpenItem() ([]entity.Item, error) {
 }
 
 func (iRepo *itemRepoImpl) FetchOpenItemByCategory(cate string) ([]entity.Item, error) {
-	filter := bson.D{{"status", "open"}, {"category", cate}}
+	filter := bson.D{{Key: "status", Value: "open"}, {Key: "category", Value: cate}}
 
 	cursor, err := iRepo.ItemColl.Find(context.Background(), filter)
 	if err != nil {
@@ -55,4 +56,10 @@ func (iRepo *itemRepoImpl) FetchOpenItemByCategory(cate string) ([]entity.Item, 
 func (iRepo *itemRepoImpl) Create(item entity.Item) (interface{}, error) {
 	res, err := iRepo.ItemColl.InsertOne(context.Background(), item)
 	return res.InsertedID, err
+}
+
+func (iRepo *itemRepoImpl) GetItemByID(id primitive.ObjectID) (res entity.Item, err error) {
+	filter := bson.D{{Key: "_id", Value: id}}
+	err = iRepo.ItemColl.FindOne(context.Background(), filter).Decode(&res)
+	return
 }
