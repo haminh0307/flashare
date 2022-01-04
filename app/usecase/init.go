@@ -9,6 +9,7 @@ import (
 
 type FlashareUsecase struct {
 	AuthenticationUC user_usecase.AuthenticationUsecase
+	ProfileUC        user_usecase.ProfileUsecase
 	ItemUC           item_usecase.ItemUsecase
 	RequestUC        request_usecase.RequestUsecase
 	MessageUC        message_usecase.MessageUsecase
@@ -21,11 +22,13 @@ func GetFlashareUsecase() FlashareUsecase {
 }
 
 func InitFlashareUsecase(authUC user_usecase.AuthenticationUsecase,
+	profileUC user_usecase.ProfileUsecase,
 	itemUC item_usecase.ItemUsecase,
 	requestUC request_usecase.RequestUsecase,
 	messageUC message_usecase.MessageUsecase) {
 	flashareUC = FlashareUsecase{
 		authUC,
+		profileUC,
 		itemUC,
 		requestUC,
 		messageUC,

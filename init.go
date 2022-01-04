@@ -61,6 +61,7 @@ func InitRepo(user, pwd, db string) {
 func InitUsecase() {
 	userRepo := repository.GetFlashareRepo().UserRepo
 	authUC := user_usecase.NewAuthenticationUsecase(userRepo)
+	profileUC := user_usecase.NewProfileUsecase(userRepo)
 
 	itemRepo := repository.GetFlashareRepo().ItemRepo
 	itemUC := item_usecase.NewItemUsecase(itemRepo)
@@ -73,6 +74,7 @@ func InitUsecase() {
 
 	usecase.InitFlashareUsecase(
 		authUC,
+		profileUC,
 		itemUC,
 		requestUC,
 		messageUC,
@@ -82,6 +84,9 @@ func InitUsecase() {
 func InitController() {
 	authUC := usecase.GetFlashareUsecase().AuthenticationUC
 	authCtrl := user_controller.NewAuthenticationController(authUC)
+
+	profileUC := usecase.GetFlashareUsecase().ProfileUC
+	profileCtrl := user_controller.NewProfileController(profileUC)
 
 	itemUC := usecase.GetFlashareUsecase().ItemUC
 	itemCtrl := item_controller.NewItemController(itemUC)
@@ -94,6 +99,7 @@ func InitController() {
 
 	controller.InitFlashareController(
 		authCtrl,
+		profileCtrl,
 		itemCtrl,
 		requestCtrl,
 		messageCtrl,
@@ -103,7 +109,7 @@ func InitController() {
 func Routing(r *gin.RouterGroup) {
 	flashareController := controller.GetFlashareController()
 
-	userModule := user_controller.NewUserModule(flashareController.AuthenticationCtrl)
+	userModule := user_controller.NewUserModule(flashareController.AuthenticationCtrl, flashareController.ProfileCtrl)
 	userModule.SetupRouter(r)
 
 	itemModule := item_controller.NewItemModule(flashareController.ItemCtrl)
