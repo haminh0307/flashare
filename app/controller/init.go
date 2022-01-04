@@ -9,6 +9,7 @@ import (
 
 type FlashareController struct {
 	AuthenticationCtrl user_controller.AuthenticationController
+	ProfileCtrl        user_controller.ProfileController
 	ItemCtrl           item_controller.ItemController
 	RequestCtrl        request_controller.RequestController
 	MessageCtrl        message_controller.MessageController
@@ -21,11 +22,13 @@ func GetFlashareController() FlashareController {
 }
 
 func InitFlashareController(authCtrl user_controller.AuthenticationController,
+	profileCtrl user_controller.ProfileController,
 	itemCtrl item_controller.ItemController,
 	requestCtrl request_controller.RequestController,
 	messageCtrl message_controller.MessageController) {
 	flashareCtrl = FlashareController{
 		authCtrl,
+		profileCtrl,
 		itemCtrl,
 		requestCtrl,
 		messageCtrl,

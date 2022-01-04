@@ -6,6 +6,6 @@ import (
 )
 
 type AuthenticationUsecase interface {
-	SignIn(username, password string) (entity.User, error)
+	SignIn(email, password string) (entity.User, error)
 	SignUp(entity.User) (primitive.ObjectID, error)
 }

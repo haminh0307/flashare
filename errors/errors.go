@@ -9,9 +9,15 @@ var (
 	ErrorInternalServerError = errors.New("internal server error")
 	ErrorInvalidParameters   = errors.New("invalid parameters")
 
+	// mongo object ID errors
+	ErrorInvalidObjectID = errors.New("invalid object ID")
+
 	// auth errors
 	ErrorInvalidCredentials = errors.New("invalid credentials provided")
 	ErrorEmailAlreadyExists = errors.New("email already exists")
+
+	// profile errors
+	ErrorUserNotExists = errors.New("user not exists")
 
 	// item errors
 	ErrorFailToFetchItem     = errors.New("fail to fetch item") // temp

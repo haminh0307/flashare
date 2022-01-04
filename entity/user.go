@@ -6,11 +6,11 @@ import (
 
 type User struct {
 	ID               primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Email            string             `bson:"email" json:"email"`
-	PasswordHashCode []byte             `bson:"password_hash_code" json:"password_hash_code"`
-	FullName         string             `bson:"full_name" json:"full_name"`
-	AvatarLink       string             `bson:"avatar_link" json:"avatar_link"`
-	PhoneNumber      string             `bson:"phone_number" json:"phone_number"`
-	Address          string             `bson:"address" json:"address"`
-	Rate             float64            `bson:"rate" json:"rate"`
+	Email            string             `bson:"email,omitempty" json:"email"`
+	PasswordHashCode []byte             `bson:"password_hash_code,omitempty" json:"password_hash_code"`
+	FullName         string             `bson:"full_name,omitempty" json:"full_name"`
+	AvatarLink       string             `bson:"avatar_link,omitempty" json:"avatar_link"`
+	PhoneNumber      string             `bson:"phone_number,omitempty" json:"phone_number"`
+	Address          string             `bson:"address,omitempty" json:"address"`
+	Rate             float64            `bson:"rate,omitempty" json:"rate"`
 }
