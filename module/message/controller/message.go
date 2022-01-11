@@ -72,20 +72,20 @@ type contactResponse struct {
 func (mHandler *messageHandler) GetContacts(ctx *gin.Context) {
 	uid := ctx.Query("uid")
 	messages, err := mHandler.MsgUC.GetContacts(uid)
-
+	
+	if err != nil {
+		// TODO: output?
+		ctx.JSON(http.StatusOK, utils.DataResponse{
+			Success: false,
+			Data:    err.Error(),
+		})
+		return
+	}
+	
 	if uid == "" {
 		ctx.JSON(http.StatusBadRequest, utils.DataResponse{
 			Success: false,
 			Data:    flashare_errors.ErrorInvalidParameters.Error(),
-		})
-		return
-	}
-
-	if err != nil {
-		// TODO: output?
-		ctx.JSON(http.StatusOK, utils.DataResponse{
-			Success: true,
-			Data:    err.Error(),
 		})
 		return
 	}
@@ -102,7 +102,7 @@ func (mHandler *messageHandler) GetContacts(ctx *gin.Context) {
 
 		if err != nil {
 			ctx.JSON(http.StatusOK, utils.DataResponse{
-				Success: true,
+				Success: false,
 				Data:    err.Error(),
 			})
 			return
