@@ -35,3 +35,25 @@ func (mRepo *messageRepoImpl) FetchMessagesFromTo(sender_id, receiver_id string)
 
 	return res, err
 }
+
+func (mRepo *messageRepoImpl) FetchMessages(uid string, is_sender bool) ([]entity.Message, error) {
+	who := "sender"
+	if !is_sender {
+		who = "receiver"
+	}
+
+	filter := bson.D{{Key: who, Value: uid}}
+
+	cursor, err := mRepo.MsgColl.Find(context.Background(), filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var res []entity.Message
+
+	if err = cursor.All(context.Background(), &res); err != nil {
+		return nil, err
+	}
+
+	return res, err
+}
