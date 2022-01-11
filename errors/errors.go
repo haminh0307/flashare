@@ -32,4 +32,5 @@ var (
 
 	// message errors
 	ErrorFailToFetchMessage = errors.New("fail to fetch message")
+	ErrorFailToGetContacts  = errors.New("fail to get contacts")
 )

@@ -42,3 +42,41 @@ func (mUC *messageUsecaseImpl) FetchMessagesBetween(user1_id, user2_id string) (
 
 	return res, err
 }
+
+func (mUC *messageUsecaseImpl) GetContacts(uid string) ([]entity.Message, error) {
+	// from uid
+	msg1, err := mUC.repo.FetchMessages(uid, true)
+
+	if err != nil {
+		return nil, flashare_errors.ErrorFailToGetContacts
+	}
+
+	// to uid
+	msg2, err := mUC.repo.FetchMessages(uid, false)
+
+	if err != nil {
+		return nil, flashare_errors.ErrorFailToGetContacts
+	}
+
+	res := append(msg1, msg2...)
+
+	sort.Slice(res, func(i, j int) bool {
+		return res[i].Time.After(res[j].Time)
+	})
+
+	var messages []entity.Message
+	set := map[string]bool{}
+
+	for _, msg := range res {
+		contact := msg.Sender
+		if contact == uid {
+			contact = msg.Receiver
+		}
+		if !set[contact] {
+			set[contact] = true
+			messages = append(messages, msg)
+		}
+	}
+
+	return messages, err
+}

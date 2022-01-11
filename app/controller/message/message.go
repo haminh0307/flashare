@@ -7,4 +7,5 @@ import (
 type MessageController interface {
 	SetupRouter(r *gin.RouterGroup)
 	FetchMessagesBetween(ctx *gin.Context)
+	GetContacts(ctx *gin.Context)
 }

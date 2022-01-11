@@ -95,7 +95,7 @@ func InitController() {
 	requestCtrl := request_controller.NewRequestController(requestUC)
 
 	messageUC := usecase.GetFlashareUsecase().MessageUC
-	messageCtrl := message_controller.NewMessageController(messageUC)
+	messageCtrl := message_controller.NewMessageController(messageUC, profileUC)
 
 	controller.InitFlashareController(
 		authCtrl,
