@@ -7,4 +7,5 @@ type RequestRepository interface {
 	GetArchievedRequest(id string) ([]entity.Request, error)
 	CreateRequest(entity.Request) (interface{}, error)
 	FindRequestByUserIDAndItemID(userID, itemID string) (interface{}, error)
+	GetItemRequest(id string) ([]entity.Request, error)
 }

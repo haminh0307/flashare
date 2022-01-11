@@ -74,3 +74,12 @@ func (rqUC *requestUsecaseImpl) SendRequest(userID string, itemID string) (rq en
 	}
 	return
 }
+
+func (rqUC *requestUsecaseImpl) GetItemRequest(itemID string) ([]entity.Request, error) {
+	rqs, err := rqUC.rqRepo.GetItemRequest(itemID)
+	// internal server error
+	if err != nil {
+		return nil, flashare_errors.ErrorInternalServerError
+	}
+	return rqs, err
+}
