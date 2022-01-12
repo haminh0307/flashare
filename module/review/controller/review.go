@@ -52,7 +52,7 @@ func (rvHandler *reviewHandler) AddReview(ctx *gin.Context) {
 
 	review := entity.Review{
 		Sender:   rv.Sender,
-		Receiver: rv.Review,
+		Receiver: rv.Receiver,
 		Rate:     rv.Rate,
 		Review:   rv.Review,
 	}
