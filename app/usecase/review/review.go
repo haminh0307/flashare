@@ -1,8 +1,12 @@
 package review_usecase
 
-import "flashare/entity"
+import (
+	"flashare/entity"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type ReviewUsecase interface {
-	AddReview(entity.Review) (interface{}, error)
+	AddReview(entity.Review) (primitive.ObjectID, error)
 	GetReviews(string) ([]entity.Review, error)
 }

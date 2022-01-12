@@ -19,14 +19,18 @@ func NewReviewUsecase(repo review_repository.ReviewRepository) review_usecase.Re
 	}
 }
 
-func (rUC *reviewUsecaseImpl) AddReview(review entity.Review) (interface{}, error) {
-	item_id, err := rUC.repo.Create(review)
+func (rUC *reviewUsecaseImpl) AddReview(review entity.Review) (primitive.ObjectID, error) {
+	reviewId, err := rUC.repo.Create(review)
 	if err != nil {
-		return primitive.ObjectID{}, flashare_errors.ErrorFailToUploadItem
+		return primitive.ObjectID{}, flashare_errors.ErrorFailToAddReview
 	}
-	return item_id.(primitive.ObjectID), err
+	return reviewId.(primitive.ObjectID), err
 }
 
 func (rUC *reviewUsecaseImpl) GetReviews(userId string) ([]entity.Review, error) {
-	return rUC.repo.GetReviews(userId)
+	reviews, err := rUC.repo.GetReviews(userId)
+	if err != nil {
+		return []entity.Review{}, flashare_errors.ErrorFailToGetReviews
+	}
+	return reviews, err
 }

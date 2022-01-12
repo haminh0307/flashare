@@ -10,9 +10,9 @@ type reviewModule struct {
 	ReviewCtrl review_controller.ReviewController
 }
 
-func NewReviewModule(rqController review_controller.ReviewController) reviewModule {
+func NewReviewModule(rvController review_controller.ReviewController) reviewModule {
 	return reviewModule{
-		rqController,
+		rvController,
 	}
 }
 
