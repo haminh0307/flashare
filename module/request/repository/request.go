@@ -66,3 +66,21 @@ func (rRepo *requestRepoImpl) FindRequestByUserIDAndItemID(userID, itemID string
 	err = rRepo.RequestColl.FindOne(context.Background(), filter).Decode(&rq)
 	return
 }
+
+func (rRepo *requestRepoImpl) GetItemRequest(itemID string) (rqs []entity.Request, err error) {
+	filter := bson.D{{Key: "item", Value: itemID}}
+	cursor, err := rRepo.RequestColl.Find(context.Background(), filter)
+	if err != nil {
+		return
+	}
+	defer cursor.Close(context.Background())
+	for cursor.Next(context.TODO()) {
+		var elem entity.Request
+		err = cursor.Decode(&elem)
+		if err != nil {
+			return
+		}
+		rqs = append(rqs, elem)
+	}
+	return
+}

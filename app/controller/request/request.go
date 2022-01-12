@@ -9,4 +9,5 @@ type RequestController interface {
 	GetPendingRequest(ctx *gin.Context)
 	GetArchievedRequest(ctx *gin.Context)
 	SendRequest(ctx *gin.Context)
+	GetItemRequest(ctx *gin.Context)
 }
