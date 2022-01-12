@@ -28,6 +28,10 @@ import (
 	message_controller "flashare/module/message/controller"
 	message_repository "flashare/module/message/repository"
 	message_usecase "flashare/module/message/usecase"
+
+	review_controller "flashare/module/review/controller"
+	review_repository "flashare/module/review/repository"
+	review_usecase "flashare/module/review/usecase"
 )
 
 func InitRepo(user, pwd, db string) {
@@ -49,12 +53,14 @@ func InitRepo(user, pwd, db string) {
 	itemRepo := item_repository.NewItemRepo(client.Database(db).Collection("items"))
 	requestRepo := request_repository.NewRequestRepo(client.Database(db).Collection("requests"))
 	messageRepo := message_repository.NewMessageRepo(client.Database(db).Collection("messages"))
+	reviewRepo := review_repository.NewReviewRepo(client.Database(db).Collection("reviews"))
 
 	repository.InitFlashareRepo(
 		userRepo,
 		itemRepo,
 		requestRepo,
 		messageRepo,
+		reviewRepo,
 	)
 }
 
@@ -72,12 +78,16 @@ func InitUsecase() {
 	messageRepo := repository.GetFlashareRepo().MessageRepo
 	messageUC := message_usecase.NewMessageUsecase(messageRepo)
 
+	reviewRepo := repository.GetFlashareRepo().ReviewRepo
+	reviewUC := review_usecase.NewReviewUsecase(reviewRepo)
+
 	usecase.InitFlashareUsecase(
 		authUC,
 		profileUC,
 		itemUC,
 		requestUC,
 		messageUC,
+		reviewUC,
 	)
 }
 
@@ -97,12 +107,16 @@ func InitController() {
 	messageUC := usecase.GetFlashareUsecase().MessageUC
 	messageCtrl := message_controller.NewMessageController(messageUC, profileUC)
 
+	reviewUC := usecase.GetFlashareUsecase().ReviewUC
+	reviewCtrl := review_controller.NewReviewController(reviewUC, profileUC)
+
 	controller.InitFlashareController(
 		authCtrl,
 		profileCtrl,
 		itemCtrl,
 		requestCtrl,
 		messageCtrl,
+		reviewCtrl,
 	)
 }
 
@@ -120,4 +134,7 @@ func Routing(r *gin.RouterGroup) {
 
 	messageModule := message_controller.NewMessageModule(flashareController.MessageCtrl)
 	messageModule.SetupRouter(r)
+
+	reviewModule := review_controller.NewReviewModule(flashareController.ReviewCtrl)
+	reviewModule.SetupRouter(r)
 }

@@ -12,5 +12,4 @@ type User struct {
 	AvatarLink       string             `bson:"avatar_link,omitempty" json:"avatar_link"`
 	PhoneNumber      string             `bson:"phone_number,omitempty" json:"phone_number"`
 	Address          string             `bson:"address,omitempty" json:"address"`
-	Rate             float64            `bson:"rate,omitempty" json:"rate"`
 }
