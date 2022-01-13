@@ -24,6 +24,9 @@ func NewRequestController(requestUC request_usecase.RequestUsecase) request_cont
 func (rqHandler *requestHandler) SetupRouter(r *gin.RouterGroup) {
 	r.POST("/get-pending", rqHandler.GetPendingRequest)
 	r.POST("/get-archieved", rqHandler.GetArchievedRequest)
+	r.POST("/send-request", rqHandler.SendRequest)
+	r.POST("/get-item-request", rqHandler.GetItemRequest)
+
 }
 
 type requestByUserID struct {
@@ -64,6 +67,62 @@ func (rqHandler *requestHandler) GetArchievedRequest(ctx *gin.Context) {
 		return
 	}
 	requestList, err := rqHandler.RequestUC.GetArchievedRequest(rq.UserID)
+	// internal server error
+	if err != nil {
+		ctx.JSON(http.StatusOK, utils.DataResponse{
+			Success: false,
+			Data:    err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.DataResponse{
+		Success: true,
+		Data:    requestList,
+	})
+}
+
+type requestItem struct {
+	UserID string `json:"user_id" binding:"required"`
+	ItemID string `json:"item_id" binding:"required"`
+}
+
+func (rqHandler *requestHandler) SendRequest(ctx *gin.Context) {
+	var rq requestItem
+	if err := ctx.ShouldBind(&rq); err != nil {
+		ctx.JSON(http.StatusBadRequest, utils.DataResponse{
+			Success: false,
+			Data:    flashare_errors.ErrorInvalidParameters.Error(),
+		})
+		return
+	}
+	createdRequest, err := rqHandler.RequestUC.SendRequest(rq.UserID, rq.ItemID)
+	if err != nil {
+		ctx.JSON(http.StatusOK, utils.DataResponse{
+			Success: false,
+			Data:    err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.DataResponse{
+		Success: true,
+		Data:    createdRequest,
+	})
+}
+
+type requestItemRequest struct {
+	ItemID string `json:"item_id" binding:"required"`
+}
+
+func (rqHandler *requestHandler) GetItemRequest(ctx *gin.Context) {
+	var rq requestItemRequest
+	if err := ctx.ShouldBind(&rq); err != nil {
+		ctx.JSON(http.StatusBadRequest, utils.DataResponse{
+			Success: false,
+			Data:    flashare_errors.ErrorInvalidParameters.Error(),
+		})
+		return
+	}
+	requestList, err := rqHandler.RequestUC.GetItemRequest(rq.ItemID)
 	// internal server error
 	if err != nil {
 		ctx.JSON(http.StatusOK, utils.DataResponse{

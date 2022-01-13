@@ -6,10 +6,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"flashare/app/controller/item"
-	"flashare/app/usecase/item"
+	item_controller "flashare/app/controller/item"
+	item_usecase "flashare/app/usecase/item"
 	"flashare/entity"
-	"flashare/errors"
+	flashare_errors "flashare/errors"
 	"flashare/utils"
 )
 
@@ -35,7 +35,7 @@ func (iHandler *itemHandler) Fetch(ctx *gin.Context) {
 	if err != nil {
 		// TODO: output?
 		ctx.JSON(http.StatusOK, utils.DataResponse{
-			Success: true,
+			Success: false,
 			Data:    err.Error(),
 		})
 		return
@@ -85,11 +85,11 @@ func (iHandler *itemHandler) Upload(ctx *gin.Context) {
 		Status:      "open",
 	}
 
-	item_id, err := iHandler.ItemUC.Upload(item)
+	itemID, err := iHandler.ItemUC.Upload(item)
 
 	if err != nil {
 		ctx.JSON(http.StatusOK, utils.DataResponse{
-			Success: true,
+			Success: false,
 			Data:    err.Error(),
 		})
 		return
@@ -97,6 +97,6 @@ func (iHandler *itemHandler) Upload(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, utils.DataResponse{
 		Success: true,
-		Data:    item_id,
+		Data:    itemID,
 	})
 }

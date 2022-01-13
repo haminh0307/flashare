@@ -24,6 +24,14 @@ import (
 	item_controller "flashare/module/item/controller"
 	item_repository "flashare/module/item/repository"
 	item_usecase "flashare/module/item/usecase"
+
+	message_controller "flashare/module/message/controller"
+	message_repository "flashare/module/message/repository"
+	message_usecase "flashare/module/message/usecase"
+
+	review_controller "flashare/module/review/controller"
+	review_repository "flashare/module/review/repository"
+	review_usecase "flashare/module/review/usecase"
 )
 
 func InitRepo(user, pwd, db string) {
@@ -44,28 +52,42 @@ func InitRepo(user, pwd, db string) {
 	userRepo := user_repository.NewUserRepo(client.Database(db).Collection("users"))
 	itemRepo := item_repository.NewItemRepo(client.Database(db).Collection("items"))
 	requestRepo := request_repository.NewRequestRepo(client.Database(db).Collection("requests"))
+	messageRepo := message_repository.NewMessageRepo(client.Database(db).Collection("messages"))
+	reviewRepo := review_repository.NewReviewRepo(client.Database(db).Collection("reviews"))
 
 	repository.InitFlashareRepo(
 		userRepo,
 		itemRepo,
 		requestRepo,
+		messageRepo,
+		reviewRepo,
 	)
 }
 
 func InitUsecase() {
 	userRepo := repository.GetFlashareRepo().UserRepo
 	authUC := user_usecase.NewAuthenticationUsecase(userRepo)
+	profileUC := user_usecase.NewProfileUsecase(userRepo)
 
 	itemRepo := repository.GetFlashareRepo().ItemRepo
 	itemUC := item_usecase.NewItemUsecase(itemRepo)
 
 	requestRepo := repository.GetFlashareRepo().RequestRepo
-	requestUC := request_usecase.NewRequestUsecase(requestRepo)
+	requestUC := request_usecase.NewRequestUsecase(requestRepo, itemRepo)
+
+	messageRepo := repository.GetFlashareRepo().MessageRepo
+	messageUC := message_usecase.NewMessageUsecase(messageRepo)
+
+	reviewRepo := repository.GetFlashareRepo().ReviewRepo
+	reviewUC := review_usecase.NewReviewUsecase(reviewRepo)
 
 	usecase.InitFlashareUsecase(
 		authUC,
+		profileUC,
 		itemUC,
 		requestUC,
+		messageUC,
+		reviewUC,
 	)
 }
 
@@ -73,23 +95,35 @@ func InitController() {
 	authUC := usecase.GetFlashareUsecase().AuthenticationUC
 	authCtrl := user_controller.NewAuthenticationController(authUC)
 
+	profileUC := usecase.GetFlashareUsecase().ProfileUC
+	profileCtrl := user_controller.NewProfileController(profileUC)
+
 	itemUC := usecase.GetFlashareUsecase().ItemUC
 	itemCtrl := item_controller.NewItemController(itemUC)
 
 	requestUC := usecase.GetFlashareUsecase().RequestUC
 	requestCtrl := request_controller.NewRequestController(requestUC)
 
+	messageUC := usecase.GetFlashareUsecase().MessageUC
+	messageCtrl := message_controller.NewMessageController(messageUC, profileUC)
+
+	reviewUC := usecase.GetFlashareUsecase().ReviewUC
+	reviewCtrl := review_controller.NewReviewController(reviewUC, profileUC)
+
 	controller.InitFlashareController(
 		authCtrl,
+		profileCtrl,
 		itemCtrl,
 		requestCtrl,
+		messageCtrl,
+		reviewCtrl,
 	)
 }
 
 func Routing(r *gin.RouterGroup) {
 	flashareController := controller.GetFlashareController()
 
-	userModule := user_controller.NewUserModule(flashareController.AuthenticationCtrl)
+	userModule := user_controller.NewUserModule(flashareController.AuthenticationCtrl, flashareController.ProfileCtrl)
 	userModule.SetupRouter(r)
 
 	itemModule := item_controller.NewItemModule(flashareController.ItemCtrl)
@@ -97,4 +131,10 @@ func Routing(r *gin.RouterGroup) {
 
 	requestModule := request_controller.NewRequestModule(flashareController.RequestCtrl)
 	requestModule.SetupRouter(r)
+
+	messageModule := message_controller.NewMessageModule(flashareController.MessageCtrl)
+	messageModule.SetupRouter(r)
+
+	reviewModule := review_controller.NewReviewModule(flashareController.ReviewCtrl)
+	reviewModule.SetupRouter(r)
 }
