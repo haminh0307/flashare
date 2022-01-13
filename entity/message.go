@@ -7,9 +7,9 @@ import (
 )
 
 type Message struct {
-	ID       primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Sender   string             `json:"sender"`
-	Receiver string             `json:"receiver"`
-	Content  string             `json:"content"`
-	Time     time.Time          `bson:"time" json:"time"`
+	ID       primitive.ObjectID `bson:"_id,omitempty" json:"id" binding:"required"`
+	Sender   string             `json:"sender" binding:"required"`
+	Receiver string             `json:"receiver" binding:"required"`
+	Content  string             `json:"content" binding:"required"`
+	Time     time.Time          `bson:"time" json:"time" binding:"required"`
 }
