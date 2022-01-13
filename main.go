@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
+	user_controller "flashare/module/user/controller"
 	"flashare/utils"
 )
 
@@ -26,6 +27,9 @@ func init() {
 func main() {
 	router := gin.Default()
 	Routing(router.Group("/api"))
+
+	router.GET("/api/chat/:userid", user_controller.HandleChatConnection)
+	router.GET("/api/chat/send", user_controller.HandleMessage)
 
 	if err := router.Run(":8080"); err != nil {
 		log.Fatal(err)
