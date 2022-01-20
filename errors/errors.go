@@ -20,10 +20,11 @@ var (
 	ErrorUserNotExists = errors.New("user not exists")
 
 	// item errors
-	ErrorFailToFetchItem     = errors.New("fail to fetch item") // temp
-	ErrorFailToUploadItem    = errors.New("fail to upload item")
-	ErrorFailToFindItem      = errors.New("fail to find item")
-	ErrorInvalidItemIdentity = errors.New("invalid item identity")
+	ErrorFailToFetchItem       = errors.New("fail to fetch item") // temp
+	ErrorFailToFetchRandomItem = errors.New("fail to fetch random item")
+	ErrorFailToUploadItem      = errors.New("fail to upload item")
+	ErrorFailToFindItem        = errors.New("fail to find item")
+	ErrorInvalidItemIdentity   = errors.New("invalid item identity")
 
 	// request errors
 	ErrorFailToCreateRequest  = errors.New("fail to create request")

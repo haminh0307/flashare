@@ -2,6 +2,7 @@ package item_controller
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -25,6 +26,7 @@ func NewItemController(itemUC item_usecase.ItemUsecase) item_controller.ItemCont
 
 func (iHandler *itemHandler) SetupRouter(r *gin.RouterGroup) {
 	r.GET("/fetch", iHandler.Fetch)
+	r.GET("/fetch-random", iHandler.FetchRandom)
 	r.POST("/upload", iHandler.Upload)
 }
 
@@ -32,6 +34,36 @@ func (iHandler *itemHandler) Fetch(ctx *gin.Context) {
 	// use ctx.Query to match /fetch (all category) and /fetch?category=cate
 	cate := ctx.Query("category")
 	items, err := iHandler.ItemUC.Fetch(cate)
+	if err != nil {
+		// TODO: output?
+		ctx.JSON(http.StatusOK, utils.DataResponse{
+			Success: false,
+			Data:    err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, utils.DataResponse{
+		Success: true,
+		Data:    items,
+	})
+}
+
+func (iHandler *itemHandler) FetchRandom(ctx *gin.Context) {
+	amt := ctx.Query("amount")
+
+	amount, err := strconv.Atoi(amt)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, utils.DataResponse{
+			Success: false,
+			Data:    flashare_errors.ErrorInvalidParameters.Error(),
+		})
+		return
+	}
+
+	items, err := iHandler.ItemUC.FetchRandom(amount)
+
 	if err != nil {
 		// TODO: output?
 		ctx.JSON(http.StatusOK, utils.DataResponse{
