@@ -7,5 +7,6 @@ import (
 type ItemController interface {
 	SetupRouter(r *gin.RouterGroup)
 	Fetch(ctx *gin.Context)
+	FetchRandom(ctx *gin.Context)
 	Upload(ctx *gin.Context)
 }

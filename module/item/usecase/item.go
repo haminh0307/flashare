@@ -37,6 +37,16 @@ func (iUC *itemUsecaseImpl) Fetch(cate string) ([]entity.Item, error) {
 	return items, err
 }
 
+func (iUC *itemUsecaseImpl) FetchRandom(amount int) ([]entity.Item, error) {
+	items, err := iUC.repo.FetchRandomOpenItem(amount)
+
+	if err != nil {
+		return nil, flashare_errors.ErrorFailToFetchRandomItem
+	}
+
+	return items, err
+}
+
 func (iUC *itemUsecaseImpl) Upload(item entity.Item) (primitive.ObjectID, error) {
 	item_id, err := iUC.repo.Create(item)
 	if err != nil {
