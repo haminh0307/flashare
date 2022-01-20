@@ -33,6 +33,7 @@ var (
 	// message errors
 	ErrorFailToFetchMessage = errors.New("fail to fetch message")
 	ErrorFailToGetContacts  = errors.New("fail to get contacts")
+	ErrorFailToAddMessage   = errors.New("fail to add message")
 
 	// review erros
 	ErrorFailToAddReview  = errors.New("fail to add review")

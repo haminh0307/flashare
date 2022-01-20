@@ -1,6 +1,8 @@
 package user_controller
 
 import (
+	"flashare/app/usecase"
+	"flashare/entity"
 	"flashare/utils"
 	"log"
 	"net/http"
@@ -45,9 +47,21 @@ func HandleMessage(c *gin.Context) {
 		})
 	}
 
-	//Code trong day ne ck iu
+	message := entity.Message{
+		Sender: msg.Sender,
+		Receiver: msg.Receiver,
+		Content: msg.Content,
+		Time: msg.Time,
+	}
 
-	//
+	_, err := usecase.GetFlashareUsecase().MessageUC.AddMessage(message)
+
+	if err != nil {
+		c.JSON(http.StatusOK, utils.DataResponse{
+			Success: false,
+			Data:    err.Error(),
+		})
+	}
 
 	for i := 0; i < len(clients); {
 		client := clients[i]

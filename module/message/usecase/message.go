@@ -7,6 +7,8 @@ import (
 	"flashare/app/usecase/message"
 	"flashare/entity"
 	"flashare/errors"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type messageUsecaseImpl struct {
@@ -79,4 +81,12 @@ func (mUC *messageUsecaseImpl) GetContacts(uid string) ([]entity.Message, error)
 	}
 
 	return messages, err
+}
+
+func (mUC *messageUsecaseImpl) AddMessage(msg entity.Message) (primitive.ObjectID, error) {
+	messageId, err := mUC.repo.CreateMessage(msg)
+	if err != nil {
+		return primitive.ObjectID{}, flashare_errors.ErrorFailToAddMessage
+	}
+	return messageId.(primitive.ObjectID), err
 }
