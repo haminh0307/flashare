@@ -53,7 +53,7 @@ func (iHandler *itemHandler) FetchRandom(ctx *gin.Context) {
 	// use ctx.Query to match /fetch (all category) and /fetch?category=cate
 	amt := ctx.Query("amount")
 
-	amount, err := strconv.Atoi(amt);
+	amount, err := strconv.Atoi(amt)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, utils.DataResponse{
