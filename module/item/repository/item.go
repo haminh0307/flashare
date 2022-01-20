@@ -41,7 +41,7 @@ func (iRepo *itemRepoImpl) FetchRandomOpenItem(amount int) ([]entity.Item, error
 	filter := bson.D{{Key: "status", Value: "open"}}
 	pipeline := []bson.M{bson.M{"$match": filter}, bson.M{"$sample": bson.M{"size": amount}}}
 
-	cursor, err := iRepo.ItemColl.Aggregate(context.Background(), pipeline) //Find(context.Background(), filter)
+	cursor, err := iRepo.ItemColl.Aggregate(context.Background(), pipeline)
 
 	if err != nil {
 		return []entity.Item{}, err
