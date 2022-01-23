@@ -2,6 +2,7 @@ package item_usecase
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 
 	"flashare/app/repository/item"
 	"flashare/app/usecase/item"
@@ -45,6 +46,27 @@ func (iUC *itemUsecaseImpl) FetchRandom(amount int) ([]entity.Item, error) {
 	}
 
 	return items, err
+}
+
+func (iUC *itemUsecaseImpl) GetItemById(itemId string) (entity.Item, error) {
+	id, err := primitive.ObjectIDFromHex(itemId)
+
+	// invalid id
+	if err != nil {
+		return entity.Item{}, flashare_errors.ErrorInvalidObjectID
+	}
+
+	user, err := iUC.repo.GetItemByID(id)
+	// item not exists
+	if err == mongo.ErrNoDocuments {
+		return entity.Item{}, flashare_errors.ErrorItemNotExists
+	}
+	// internal server error
+	if err != nil {
+		return entity.Item{}, flashare_errors.ErrorInternalServerError
+	}
+	// found
+	return user, err
 }
 
 func (iUC *itemUsecaseImpl) Upload(item entity.Item) (primitive.ObjectID, error) {

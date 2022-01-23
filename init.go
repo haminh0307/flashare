@@ -102,7 +102,7 @@ func InitController() {
 	itemCtrl := item_controller.NewItemController(itemUC)
 
 	requestUC := usecase.GetFlashareUsecase().RequestUC
-	requestCtrl := request_controller.NewRequestController(requestUC)
+	requestCtrl := request_controller.NewRequestController(requestUC, itemUC, profileUC)
 
 	messageUC := usecase.GetFlashareUsecase().MessageUC
 	messageCtrl := message_controller.NewMessageController(messageUC, profileUC)
