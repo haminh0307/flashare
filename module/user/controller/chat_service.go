@@ -45,6 +45,7 @@ func HandleMessage(c *gin.Context) {
 			Success: false,
 			Data:    err.Error(),
 		})
+		return;
 	}
 
 	message := entity.Message{
@@ -61,7 +62,12 @@ func HandleMessage(c *gin.Context) {
 			Success: false,
 			Data:    err.Error(),
 		})
+		return;
 	}
+	
+	c.JSON(http.StatusOK, utils.DataResponse{
+		Success: true,
+	})
 
 	for i := 0; i < len(clients); {
 		client := clients[i]

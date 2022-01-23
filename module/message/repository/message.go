@@ -60,5 +60,5 @@ func (mRepo *messageRepoImpl) FetchMessages(uid string, is_sender bool) ([]entit
 
 func (mRepo *messageRepoImpl) CreateMessage(msg entity.Message) (interface{}, error) {
 	res, err := mRepo.MsgColl.InsertOne(context.Background(), msg)
-	return res, err
+	return res.InsertedID, err
 }

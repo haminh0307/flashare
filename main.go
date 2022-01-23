@@ -29,7 +29,7 @@ func main() {
 	Routing(router.Group("/api"))
 
 	router.GET("/api/chat", user_controller.HandleChatConnection)
-	router.GET("/api/chat/send", user_controller.HandleMessage)
+	router.POST("/api/chat/send", user_controller.HandleMessage)
 
 	if err := router.Run(":8080"); err != nil {
 		log.Fatal(err)
