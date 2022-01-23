@@ -3,10 +3,10 @@ package item_usecase
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"flashare/app/repository/item"
-	"flashare/app/usecase/item"
+	item_repository "flashare/app/repository/item"
+	item_usecase "flashare/app/usecase/item"
 	"flashare/entity"
-	"flashare/errors"
+	flashare_errors "flashare/errors"
 )
 
 type itemUsecaseImpl struct {

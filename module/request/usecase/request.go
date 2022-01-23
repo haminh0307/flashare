@@ -52,6 +52,10 @@ func (rqUC *requestUsecaseImpl) SendRequest(userID string, itemID string) (rq en
 		err = flashare_errors.ErrorFailToFindItem
 		return
 	}
+	if res.Status != "open" {
+		err = flashare_errors.ErrorRequestClosedItem
+		return
+	}
 	_, err = rqUC.rqRepo.FindRequestByUserIDAndItemID(userID, itemID)
 	if err == nil {
 		err = flashare_errors.ErrorRequestAlreadyExists
@@ -82,4 +86,64 @@ func (rqUC *requestUsecaseImpl) GetItemRequest(itemID string) ([]entity.Request,
 		return nil, flashare_errors.ErrorInternalServerError
 	}
 	return rqs, err
+}
+
+func (rqUC *requestUsecaseImpl) AcceptRequest(requestID primitive.ObjectID) (int64, error) {
+	rq, err := rqUC.rqRepo.FindRequestByID(requestID)
+	// fail to find request
+	if err != nil {
+		return 0, flashare_errors.ErrorFailToFindRequest
+	}
+	// can only accept a pending request
+	if rq.Status != "pending" {
+		return 0, flashare_errors.ErrorOnlyAcceptPendingRequest
+	}
+	cnt, err := rqUC.rqRepo.CountAcceptedNumber(rq.Item)
+	// internal server error
+	if err != nil {
+		return 0, flashare_errors.ErrorInternalServerError
+	}
+	// only 1 request can be accepted
+	if cnt >= 1 {
+		return 0, flashare_errors.ErrorAcceptManyRequest
+	}
+	res, err := rqUC.rqRepo.AcceptRequest(requestID)
+	// internal server error
+	if err != nil {
+		return 0, flashare_errors.ErrorInternalServerError
+	}
+	return res, err
+}
+
+func (rqUC *requestUsecaseImpl) CancelRequest(requestID primitive.ObjectID) (int64, error) {
+	_, err := rqUC.rqRepo.FindRequestByID(requestID)
+	// fail to find request
+	if err != nil {
+		return 0, flashare_errors.ErrorFailToFindRequest
+	}
+	res, err := rqUC.rqRepo.CancelRequest(requestID)
+	// internal server error
+	if err != nil {
+		return 0, flashare_errors.ErrorInternalServerError
+	}
+	return res, err
+}
+
+func (rqUC *requestUsecaseImpl) ArchieveItem(itemID primitive.ObjectID) error {
+	_, err := rqUC.itemRepo.GetItemByID(itemID)
+	// fail to find item
+	if err != nil {
+		return flashare_errors.ErrorFailToFindItem
+	}
+	_, err = rqUC.rqRepo.ArchieveRequest(itemID.Hex())
+	// internal server error
+	if err != nil {
+		return flashare_errors.ErrorInternalServerError
+	}
+	_, err = rqUC.itemRepo.ArchieveItem(itemID)
+	// internal server error
+	if err != nil {
+		return flashare_errors.ErrorInternalServerError
+	}
+	return nil
 }

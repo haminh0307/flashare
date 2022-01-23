@@ -12,4 +12,5 @@ type ItemRepository interface {
 	FetchRandomOpenItem(amount int) ([]entity.Item, error)
 	Create(item entity.Item) (interface{}, error)
 	GetItemByID(id primitive.ObjectID) (entity.Item, error)
+	ArchieveItem(itemID primitive.ObjectID) (int64, error)
 }
