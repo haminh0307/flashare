@@ -10,4 +10,7 @@ type RequestController interface {
 	GetArchievedRequest(ctx *gin.Context)
 	SendRequest(ctx *gin.Context)
 	GetItemRequest(ctx *gin.Context)
+	AcceptRequest(ctx *gin.Context)
+	CancelRequest(ctx *gin.Context)
+	ArchieveItem(ctx *gin.Context)
 }
