@@ -93,21 +93,17 @@ func InitUsecase() {
 
 func InitController() {
 	authUC := usecase.GetFlashareUsecase().AuthenticationUC
-	authCtrl := user_controller.NewAuthenticationController(authUC)
-
 	profileUC := usecase.GetFlashareUsecase().ProfileUC
-	profileCtrl := user_controller.NewProfileController(profileUC)
-
 	itemUC := usecase.GetFlashareUsecase().ItemUC
-  requestUC := usecase.GetFlashareUsecase().RequestUC
-	
+	requestUC := usecase.GetFlashareUsecase().RequestUC
+	messageUC := usecase.GetFlashareUsecase().MessageUC
+	reviewUC := usecase.GetFlashareUsecase().ReviewUC
+
+	authCtrl := user_controller.NewAuthenticationController(authUC)
+	profileCtrl := user_controller.NewProfileController(profileUC)
 	itemCtrl := item_controller.NewItemController(itemUC, requestUC, profileUC)
 	requestCtrl := request_controller.NewRequestController(requestUC, itemUC, profileUC)
-
-	messageUC := usecase.GetFlashareUsecase().MessageUC
 	messageCtrl := message_controller.NewMessageController(messageUC, profileUC)
-
-	reviewUC := usecase.GetFlashareUsecase().ReviewUC
 	reviewCtrl := review_controller.NewReviewController(reviewUC, profileUC)
 
 	controller.InitFlashareController(
