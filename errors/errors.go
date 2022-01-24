@@ -22,6 +22,7 @@ var (
 	// item errors
 	ErrorFailToFetchItem       = errors.New("fail to fetch item") // temp
 	ErrorFailToFetchRandomItem = errors.New("fail to fetch random item")
+	ErrorFailToFetchUploadedBy = errors.New("fail to fetch uploaded by")
 	ErrorFailToUploadItem      = errors.New("fail to upload item")
 	ErrorFailToFindItem        = errors.New("fail to find item")
 	ErrorInvalidItemIdentity   = errors.New("invalid item identity")

@@ -99,9 +99,9 @@ func InitController() {
 	profileCtrl := user_controller.NewProfileController(profileUC)
 
 	itemUC := usecase.GetFlashareUsecase().ItemUC
-	itemCtrl := item_controller.NewItemController(itemUC)
+	itemCtrl := item_controller.NewItemController(itemUC, requestUC, profileUC)
 
-	requestUC := usecase.GetFlashareUsecase().RequestUC
+  requestUC := usecase.GetFlashareUsecase().RequestUC
 	requestCtrl := request_controller.NewRequestController(requestUC, itemUC, profileUC)
 
 	messageUC := usecase.GetFlashareUsecase().MessageUC
