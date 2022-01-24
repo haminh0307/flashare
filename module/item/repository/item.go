@@ -89,3 +89,10 @@ func (iRepo *itemRepoImpl) GetItemByID(id primitive.ObjectID) (res entity.Item, 
 	err = iRepo.ItemColl.FindOne(context.Background(), filter).Decode(&res)
 	return
 }
+
+func (iRepo *itemRepoImpl) ArchieveItem(id primitive.ObjectID) (int64, error) {
+	filter := bson.D{{Key: "_id", Value: id}}
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "status", Value: "closed"}}}}
+	res, err := iRepo.ItemColl.UpdateOne(context.Background(), filter, update)
+	return res.ModifiedCount, err
+}
