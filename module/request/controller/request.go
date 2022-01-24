@@ -17,7 +17,7 @@ import (
 
 type requestHandler struct {
 	RequestUC request_usecase.RequestUsecase
-	ItemUC item_usecase.ItemUsecase
+	ItemUC    item_usecase.ItemUsecase
 	ProfileUC user_usecase.ProfileUsecase
 }
 
@@ -47,10 +47,16 @@ type requestByUserID struct {
 	UserID string `json:"user_id" binding:"required"`
 }
 
+type simpleUser struct {
+	Id         string `json:"id"`
+	Name       string `json:"name"`
+	AvatarLink string `json:"avatar_link"`
+}
+
 type requestElement struct {
 	Request entity.Request `json:"request"`
-	Item entity.Item `json:"item"`
-	Sender interface{} `json:"sender"`
+	Item    entity.Item    `json:"item"`
+	Sender  simpleUser     `json:"sender"`
 }
 
 func (rqHandler *requestHandler) GetPendingRequest(ctx *gin.Context) {
@@ -75,9 +81,9 @@ func (rqHandler *requestHandler) GetPendingRequest(ctx *gin.Context) {
 	var data []requestElement
 
 	for _, r := range requestList {
-		
+
 		item, err := rqHandler.ItemUC.GetItemById(r.Item)
-		
+
 		if err != nil {
 			ctx.JSON(http.StatusOK, utils.DataResponse{
 				Success: false,
@@ -85,7 +91,7 @@ func (rqHandler *requestHandler) GetPendingRequest(ctx *gin.Context) {
 			})
 			return
 		}
-		
+
 		sender, err := rqHandler.ProfileUC.Get(r.Sender)
 
 		if err != nil {
@@ -99,11 +105,7 @@ func (rqHandler *requestHandler) GetPendingRequest(ctx *gin.Context) {
 		data = append(data, requestElement{
 			r,
 			item,
-			struct {
-				Id         string `json:"id"`
-				Name       string `json:"name"`
-				AvatarLink string `json:"avatar_link"`
-			}{
+			simpleUser{
 				r.Sender,
 				sender.FullName,
 				sender.AvatarLink,
@@ -135,13 +137,13 @@ func (rqHandler *requestHandler) GetArchievedRequest(ctx *gin.Context) {
 		})
 		return
 	}
-	
+
 	var data []requestElement
 
 	for _, r := range requestList {
-		
+
 		item, err := rqHandler.ItemUC.GetItemById(r.Item)
-		
+
 		if err != nil {
 			ctx.JSON(http.StatusOK, utils.DataResponse{
 				Success: false,
@@ -149,7 +151,7 @@ func (rqHandler *requestHandler) GetArchievedRequest(ctx *gin.Context) {
 			})
 			return
 		}
-		
+
 		sender, err := rqHandler.ProfileUC.Get(r.Sender)
 
 		if err != nil {
@@ -163,11 +165,7 @@ func (rqHandler *requestHandler) GetArchievedRequest(ctx *gin.Context) {
 		data = append(data, requestElement{
 			r,
 			item,
-			struct {
-				Id         string `json:"id"`
-				Name       string `json:"name"`
-				AvatarLink string `json:"avatar_link"`
-			}{
+			simpleUser{
 				r.Sender,
 				sender.FullName,
 				sender.AvatarLink,
@@ -213,6 +211,11 @@ type requestItemRequest struct {
 	ItemID string `json:"item_id" binding:"required"`
 }
 
+type itemRequestElement struct {
+	Request entity.Request `json:"request"`
+	Sender  simpleUser     `json:"sender"`
+}
+
 func (rqHandler *requestHandler) GetItemRequest(ctx *gin.Context) {
 	var rq requestItemRequest
 	if err := ctx.ShouldBind(&rq); err != nil {
@@ -231,9 +234,33 @@ func (rqHandler *requestHandler) GetItemRequest(ctx *gin.Context) {
 		})
 		return
 	}
+
+	var data []itemRequestElement
+
+	for _, r := range requestList {
+		sender, err := rqHandler.ProfileUC.Get(r.Sender)
+
+		if err != nil {
+			ctx.JSON(http.StatusOK, utils.DataResponse{
+				Success: false,
+				Data:    err.Error(),
+			})
+			return
+		}
+
+		data = append(data, itemRequestElement{
+			r,
+			simpleUser{
+				r.Sender,
+				sender.FullName,
+				sender.AvatarLink,
+			},
+		})
+	}
+
 	ctx.JSON(http.StatusOK, utils.DataResponse{
 		Success: true,
-		Data:    requestList,
+		Data:    data,
 	})
 }
 
