@@ -9,5 +9,6 @@ import (
 type ItemUsecase interface {
 	Fetch(cate string) ([]entity.Item, error)
 	FetchRandom(amount int) ([]entity.Item, error)
+	GetItemById(id string) (entity.Item, error)
 	Upload(item entity.Item) (primitive.ObjectID, error)
 }

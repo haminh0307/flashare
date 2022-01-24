@@ -25,6 +25,7 @@ var (
 	ErrorFailToUploadItem      = errors.New("fail to upload item")
 	ErrorFailToFindItem        = errors.New("fail to find item")
 	ErrorInvalidItemIdentity   = errors.New("invalid item identity")
+	ErrorItemNotExists         = errors.New("item not exists")
 
 	// request errors
 	ErrorFailToCreateRequest      = errors.New("fail to create request")
