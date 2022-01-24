@@ -10,6 +10,7 @@ type ItemRepository interface {
 	FetchOpenItem() ([]entity.Item, error)
 	FetchOpenItemByCategory(cate string) ([]entity.Item, error)
 	FetchRandomOpenItem(amount int) ([]entity.Item, error)
+	FetchItemUploadedBy(uid string) ([]entity.Item, error)
 	Create(item entity.Item) (interface{}, error)
 	GetItemByID(id primitive.ObjectID) (entity.Item, error)
 }

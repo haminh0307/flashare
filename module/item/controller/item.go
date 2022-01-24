@@ -9,6 +9,8 @@ import (
 
 	item_controller "flashare/app/controller/item"
 	item_usecase "flashare/app/usecase/item"
+	request_usecase "flashare/app/usecase/request"
+	user_usecase "flashare/app/usecase/user"
 	"flashare/entity"
 	flashare_errors "flashare/errors"
 	"flashare/utils"
@@ -16,17 +18,25 @@ import (
 
 type itemHandler struct {
 	ItemUC item_usecase.ItemUsecase
+	RequestUC request_usecase.RequestUsecase
+	ProfileUC user_usecase.ProfileUsecase
 }
 
-func NewItemController(itemUC item_usecase.ItemUsecase) item_controller.ItemController {
+func NewItemController(
+	itemUC item_usecase.ItemUsecase,
+	requestUC request_usecase.RequestUsecase,
+	profileUC user_usecase.ProfileUsecase) item_controller.ItemController {
 	return &itemHandler{
 		itemUC,
+		requestUC,
+		profileUC,
 	}
 }
 
 func (iHandler *itemHandler) SetupRouter(r *gin.RouterGroup) {
 	r.GET("/fetch", iHandler.Fetch)
 	r.GET("/fetch-random", iHandler.FetchRandom)
+	r.GET("/fetch-uploaded-by", iHandler.FetchUploadedBy)
 	r.POST("/upload", iHandler.Upload)
 }
 
@@ -46,6 +56,84 @@ func (iHandler *itemHandler) Fetch(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.DataResponse{
 		Success: true,
 		Data:    items,
+	})
+}
+
+type itemElement struct {
+	Item     entity.Item `json:"item"`
+	Receiver interface{} `json:"requester"`
+}
+
+func (iHandler *itemHandler) FetchUploadedBy(ctx *gin.Context) {
+	uid := ctx.Query("uid")
+
+	if uid == "" {
+		ctx.JSON(http.StatusBadRequest, utils.DataResponse{
+			Success: false,
+			Data:    flashare_errors.ErrorInvalidParameters.Error(),
+		})
+		return
+	}
+
+	items, err := iHandler.ItemUC.FetchUploadedBy(uid)
+
+	if err != nil {
+		ctx.JSON(http.StatusOK, utils.DataResponse{
+			Success: false,
+			Data:    err.Error(),
+		})
+		return
+	}
+
+	var data []itemElement
+
+	for _, i := range items {
+		requests, err := iHandler.RequestUC.GetItemRequest(i.ID.Hex())
+
+		if err != nil {
+			ctx.JSON(http.StatusOK, utils.DataResponse{
+				Success: false,
+				Data:    err.Error(),
+			})
+			return
+		}
+
+		var requester interface{}
+
+		for j := range requests {
+			if requests[j].Status == "accepted" || requests[j].Status == "archieved" {
+				user, err := iHandler.ProfileUC.Get(requests[j].Sender)
+
+				if err != nil {
+					ctx.JSON(http.StatusOK, utils.DataResponse{
+						Success: false,
+						Data:    err.Error(),
+					})
+					return
+				}
+
+				requester = struct {
+					Id         string `json:"id"`
+					Name       string `json:"name"`
+					AvatarLink string `json:"avatar_link"`
+				}{
+					requests[j].Receiver,
+					user.FullName,
+					user.AvatarLink,
+				}
+				break;
+			}
+		}
+
+		data = append(data, itemElement{
+			i,
+			requester,
+		})
+	}
+	
+	ctx.JSON(http.StatusOK, utils.DataResponse{
+		Success: true,
+		Data:    data,
 	})
 }
 

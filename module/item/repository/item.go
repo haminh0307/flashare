@@ -79,6 +79,22 @@ func (iRepo *itemRepoImpl) FetchOpenItemByCategory(cate string) ([]entity.Item, 
 	return res, err
 }
 
+func (iRepo *itemRepoImpl) FetchItemUploadedBy(uid string) ([]entity.Item, error) {
+	filter := bson.D{{Key: "uploaded_by", Value: uid}}
+
+	cursor, err := iRepo.ItemColl.Find(context.Background(), filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var res []entity.Item
+	if err = cursor.All(context.Background(), &res); err != nil {
+		return nil, err
+	}
+
+	return res, err
+}
+
 func (iRepo *itemRepoImpl) Create(item entity.Item) (interface{}, error) {
 	res, err := iRepo.ItemColl.InsertOne(context.Background(), item)
 	return res.InsertedID, err
