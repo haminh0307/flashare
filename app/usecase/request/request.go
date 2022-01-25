@@ -9,6 +9,7 @@ import (
 type RequestUsecase interface {
 	GetPendingRequest(id string) (rqs []entity.Request, err error)
 	GetArchievedRequest(id string) (rqs []entity.Request, err error)
+	GetCancelledRequest(id string) (rqs []entity.Request, err error)
 	SendRequest(userID string, itemID string) (entity.Request, error)
 	GetItemRequest(itemID string) (rqs []entity.Request, err error)
 	AcceptRequest(requestID primitive.ObjectID) (int64, error)

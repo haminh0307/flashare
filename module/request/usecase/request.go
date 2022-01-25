@@ -41,6 +41,15 @@ func (rqUC *requestUsecaseImpl) GetArchievedRequest(userID string) ([]entity.Req
 	return rqs, err
 }
 
+func (rqUC *requestUsecaseImpl) GetCancelledRequest(userID string) ([]entity.Request, error) {
+	rqs, err := rqUC.rqRepo.GetCancelledRequest(userID)
+	// internal server error
+	if err != nil {
+		return nil, flashare_errors.ErrorInternalServerError
+	}
+	return rqs, err
+}
+
 func (rqUC *requestUsecaseImpl) SendRequest(userID string, itemID string) (rq entity.Request, err error) {
 	objectID, err := primitive.ObjectIDFromHex(itemID)
 	if err != nil {

@@ -57,6 +57,24 @@ func (rRepo *requestRepoImpl) GetArchievedRequest(userID string) (rqs []entity.R
 	return
 }
 
+func (rRepo *requestRepoImpl) GetCancelledRequest(userID string) (rqs []entity.Request, err error) {
+	filter := bson.D{{Key: "sender", Value: userID}, {Key: "status", Value: "cancelled"}}
+	cursor, err := rRepo.RequestColl.Find(context.Background(), filter)
+	if err != nil {
+		return
+	}
+	defer cursor.Close(context.Background())
+	for cursor.Next(context.TODO()) {
+		var elem entity.Request
+		err = cursor.Decode(&elem)
+		if err != nil {
+			return
+		}
+		rqs = append(rqs, elem)
+	}
+	return
+}
+
 func (rRepo *requestRepoImpl) CreateRequest(request entity.Request) (interface{}, error) {
 	rq, err := rRepo.RequestColl.InsertOne(context.Background(), request)
 	return rq.InsertedID, err
