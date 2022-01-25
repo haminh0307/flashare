@@ -117,7 +117,7 @@ func (iHandler *itemHandler) FetchUploadedBy(ctx *gin.Context) {
 					Name       string `json:"name"`
 					AvatarLink string `json:"avatar_link"`
 				}{
-					requests[j].Receiver,
+					requests[j].Sender,
 					user.FullName,
 					user.AvatarLink,
 				}
