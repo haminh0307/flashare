@@ -45,14 +45,14 @@ func HandleMessage(c *gin.Context) {
 			Success: false,
 			Data:    err.Error(),
 		})
-		return;
+		return
 	}
 
 	message := entity.Message{
-		Sender: msg.Sender,
+		Sender:   msg.Sender,
 		Receiver: msg.Receiver,
-		Content: msg.Content,
-		Time: msg.Time,
+		Content:  msg.Content,
+		Time:     msg.Time,
 	}
 
 	_, err := usecase.GetFlashareUsecase().MessageUC.AddMessage(message)
@@ -62,16 +62,16 @@ func HandleMessage(c *gin.Context) {
 			Success: false,
 			Data:    err.Error(),
 		})
-		return;
+		return
 	}
-	
+
 	c.JSON(http.StatusOK, utils.DataResponse{
 		Success: true,
 	})
 
 	for i := 0; i < len(clients); {
 		client := clients[i]
-		if msg.Receiver == client.Sender && msg.Sender == client.Receiver {
+		if (msg.Receiver == client.Sender && msg.Sender == client.Receiver) || (msg.Receiver == client.Receiver && msg.Sender == msg.Sender) {
 			err := client.Connection.WriteJSON(msg)
 			if err != nil {
 				client.Connection.Close()
