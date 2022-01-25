@@ -92,7 +92,7 @@ func (rqHandler *requestHandler) GetPendingRequest(ctx *gin.Context) {
 			return
 		}
 
-		sender, err := rqHandler.ProfileUC.Get(r.Sender)
+		sender, err := rqHandler.ProfileUC.Get(item.UploadedBy)
 
 		if err != nil {
 			ctx.JSON(http.StatusOK, utils.DataResponse{
@@ -106,7 +106,7 @@ func (rqHandler *requestHandler) GetPendingRequest(ctx *gin.Context) {
 			r,
 			item,
 			simpleUser{
-				r.Sender,
+				item.UploadedBy,
 				sender.FullName,
 				sender.AvatarLink,
 			},
@@ -152,7 +152,7 @@ func (rqHandler *requestHandler) GetArchievedRequest(ctx *gin.Context) {
 			return
 		}
 
-		sender, err := rqHandler.ProfileUC.Get(r.Sender)
+		sender, err := rqHandler.ProfileUC.Get(item.UploadedBy)
 
 		if err != nil {
 			ctx.JSON(http.StatusOK, utils.DataResponse{
@@ -166,7 +166,7 @@ func (rqHandler *requestHandler) GetArchievedRequest(ctx *gin.Context) {
 			r,
 			item,
 			simpleUser{
-				r.Sender,
+				item.UploadedBy,
 				sender.FullName,
 				sender.AvatarLink,
 			},
