@@ -6,7 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"flashare/app/repository/message"
+	message_repository "flashare/app/repository/message"
 	"flashare/entity"
 )
 
@@ -56,4 +56,9 @@ func (mRepo *messageRepoImpl) FetchMessages(uid string, is_sender bool) ([]entit
 	}
 
 	return res, err
+}
+
+func (mRepo *messageRepoImpl) CreateMessage(msg entity.Message) (interface{}, error) {
+	res, err := mRepo.MsgColl.InsertOne(context.Background(), msg)
+	return res.InsertedID, err
 }

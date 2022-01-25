@@ -6,10 +6,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"flashare/app/controller/message"
-	"flashare/app/usecase/message"
-	"flashare/app/usecase/user"
-	"flashare/errors"
+	message_controller "flashare/app/controller/message"
+	message_usecase "flashare/app/usecase/message"
+	user_usecase "flashare/app/usecase/user"
+	flashare_errors "flashare/errors"
 	"flashare/utils"
 )
 
@@ -71,7 +71,7 @@ type contactResponse struct {
 
 func (mHandler *messageHandler) GetContacts(ctx *gin.Context) {
 	uid := ctx.Query("uid")
-	
+
 	if uid == "" {
 		ctx.JSON(http.StatusBadRequest, utils.DataResponse{
 			Success: false,
@@ -79,9 +79,9 @@ func (mHandler *messageHandler) GetContacts(ctx *gin.Context) {
 		})
 		return
 	}
-	
+
 	messages, err := mHandler.MsgUC.GetContacts(uid)
-	
+
 	if err != nil {
 		// TODO: output?
 		ctx.JSON(http.StatusOK, utils.DataResponse{
