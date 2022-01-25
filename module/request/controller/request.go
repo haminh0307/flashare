@@ -35,6 +35,7 @@ func NewRequestController(
 func (rqHandler *requestHandler) SetupRouter(r *gin.RouterGroup) {
 	r.POST("/get-pending", rqHandler.GetPendingRequest)
 	r.POST("/get-archieved", rqHandler.GetArchievedRequest)
+	r.POST("/get-cancelled", rqHandler.GetCancelledRequest)
 	r.POST("/send-request", rqHandler.SendRequest)
 	r.POST("/get-item-request", rqHandler.GetItemRequest)
 	r.POST("/accept-request", rqHandler.AcceptRequest)
@@ -129,6 +130,66 @@ func (rqHandler *requestHandler) GetArchievedRequest(ctx *gin.Context) {
 		return
 	}
 	requestList, err := rqHandler.RequestUC.GetArchievedRequest(rq.UserID)
+	// internal server error
+	if err != nil {
+		ctx.JSON(http.StatusOK, utils.DataResponse{
+			Success: false,
+			Data:    err.Error(),
+		})
+		return
+	}
+
+	var data []requestElement
+
+	for _, r := range requestList {
+
+		item, err := rqHandler.ItemUC.GetItemById(r.Item)
+
+		if err != nil {
+			ctx.JSON(http.StatusOK, utils.DataResponse{
+				Success: false,
+				Data:    err.Error(),
+			})
+			return
+		}
+
+		sender, err := rqHandler.ProfileUC.Get(item.UploadedBy)
+
+		if err != nil {
+			ctx.JSON(http.StatusOK, utils.DataResponse{
+				Success: false,
+				Data:    err.Error(),
+			})
+			return
+		}
+
+		data = append(data, requestElement{
+			r,
+			item,
+			simpleUser{
+				item.UploadedBy,
+				sender.FullName,
+				sender.AvatarLink,
+			},
+		})
+	}
+
+	ctx.JSON(http.StatusOK, utils.DataResponse{
+		Success: true,
+		Data:    data,
+	})
+}
+
+func (rqHandler *requestHandler) GetCancelledRequest(ctx *gin.Context) {
+	var rq requestByUserID
+	if err := ctx.ShouldBind(&rq); err != nil {
+		ctx.JSON(http.StatusBadRequest, utils.DataResponse{
+			Success: false,
+			Data:    flashare_errors.ErrorInvalidParameters.Error(),
+		})
+		return
+	}
+	requestList, err := rqHandler.RequestUC.GetCancelledRequest(rq.UserID)
 	// internal server error
 	if err != nil {
 		ctx.JSON(http.StatusOK, utils.DataResponse{

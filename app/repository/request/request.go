@@ -9,6 +9,7 @@ import (
 type RequestRepository interface {
 	GetPendingRequest(id string) ([]entity.Request, error)
 	GetArchievedRequest(id string) ([]entity.Request, error)
+	GetCancelledRequest(id string) ([]entity.Request, error)
 	CreateRequest(entity.Request) (interface{}, error)
 	FindRequestByUserIDAndItemID(userID, itemID string) (interface{}, error)
 	FindRequestByID(requestID primitive.ObjectID) (entity.Request, error)
